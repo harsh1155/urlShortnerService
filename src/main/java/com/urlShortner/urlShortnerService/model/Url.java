@@ -16,6 +16,10 @@ public class Url {
     private LocalDateTime creationDate;
     private LocalDateTime expirationDate;
 
+    public Url() {
+
+    }
+
     public long getId() {
         return id;
     }

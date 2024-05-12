@@ -1,5 +1,6 @@
 package com.urlShortner.urlShortnerService.model;
 
+
 public class UrlDto {
 
    private String url;
