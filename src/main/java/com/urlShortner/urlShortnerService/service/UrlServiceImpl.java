@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 
-@Component
+
 public class UrlServiceImpl implements UrlService {
 
     @Autowired

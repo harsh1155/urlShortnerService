@@ -26,6 +26,9 @@ public class UrlErrorResponseDto {
         this.error = error;
     }
 
+    public UrlErrorResponseDto() {
+    }
+
     @Override
     public String toString() {
         return "UrlErrorResponseDto{" +
