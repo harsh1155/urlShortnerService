@@ -5,13 +5,18 @@ import com.urlShortner.urlShortnerService.Dao.UrlDao;
 import com.urlShortner.urlShortnerService.model.Url;
 import com.urlShortner.urlShortnerService.model.UrlDto;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 
 
+@Component
 public class UrlServiceImpl implements UrlService {
+
+    private static final Logger logger = LoggerFactory.getLogger(UrlServiceImpl.class);
 
     @Autowired
     private UrlDao urlDao;
@@ -19,7 +24,8 @@ public class UrlServiceImpl implements UrlService {
     @Override
     public Url generateUrl(UrlDto urlDto) {
         // checking is exisitng url is empty or not
-        if(StringUtils.isNotEmpty(urlDto.getUrl())){
+        if(StringUtils.isNotEmpty(urlDto.getUrl()))
+        {
            String encodedUrl = encodedUrl(urlDto.getUrl()); // calling encode url method
            Url urlToPersist = new Url();
            urlToPersist.setCreationDate(LocalDateTime.now());
@@ -28,9 +34,9 @@ public class UrlServiceImpl implements UrlService {
            urlToPersist.setExpirationDate(getExpiration(urlDto.getExpirationDate(),
                    urlToPersist.getCreationDate()));
            Url urlToReturn = persistShortLink(urlToPersist);
-           if(urlToReturn != null){
+           if(urlToReturn != null)
                return urlToReturn;
-           }
+
             return null;
         }
 
@@ -40,7 +46,8 @@ public class UrlServiceImpl implements UrlService {
     private LocalDateTime getExpiration(String expirationDate, LocalDateTime creationDate)
     {
 
-        if(StringUtils.isBlank(expirationDate)){
+        if(StringUtils.isBlank(expirationDate))
+        {
             return creationDate.plusSeconds(60);
         }
         LocalDateTime returnExpiration = LocalDateTime.parse(expirationDate);

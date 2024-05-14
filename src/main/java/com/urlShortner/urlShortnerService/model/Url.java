@@ -3,6 +3,8 @@ package com.urlShortner.urlShortnerService.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+
 import java.time.LocalDateTime;
 
 
@@ -11,6 +13,7 @@ public class Url {
     @Id
     @GeneratedValue
     private long id;
+    @Lob
     private String originalLink;
     private String shortLink;
     private LocalDateTime creationDate;

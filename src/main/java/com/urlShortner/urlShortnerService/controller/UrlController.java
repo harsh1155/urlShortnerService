@@ -20,7 +20,8 @@ public class UrlController {
     @PostMapping("/generate")
     public ResponseEntity<?> genrateUrl(@RequestBody UrlDto urlDto){
         Url urlToReturn = urlService.generateUrl(urlDto);
-        if(urlToReturn!= null){
+        if(urlToReturn != null)
+        {
             UrlResponseDto urlResponseDto = new UrlResponseDto();
             urlResponseDto.setOriginalUrl(urlToReturn.getOriginalLink());
             urlResponseDto.setExpirationDate(urlToReturn.getExpirationDate());

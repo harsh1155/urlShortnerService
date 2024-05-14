@@ -10,6 +10,9 @@ public class UrlErrorResponseDto {
         this.error = error;
     }
 
+    public UrlErrorResponseDto() {
+    }
+
     public String getStatus() {
         return status;
     }
@@ -24,9 +27,6 @@ public class UrlErrorResponseDto {
 
     public void setError(String error) {
         this.error = error;
-    }
-
-    public UrlErrorResponseDto() {
     }
 
     @Override
