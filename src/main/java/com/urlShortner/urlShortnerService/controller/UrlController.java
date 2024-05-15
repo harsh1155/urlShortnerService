@@ -21,10 +21,9 @@ public class UrlController {
     private UrlService urlService;
 
     @PostMapping("/generate")
-    public ResponseEntity<?> genrateUrl(@RequestBody UrlDto urlDto){
+    public ResponseEntity<?> genrateUrl(@RequestBody UrlDto urlDto) {
         Url urlToReturn = urlService.generateUrl(urlDto);
-        if(urlToReturn != null)
-        {
+        if (urlToReturn != null) {
             UrlResponseDto urlResponseDto = new UrlResponseDto();
             urlResponseDto.setOriginalUrl(urlToReturn.getOriginalLink());
             urlResponseDto.setExpirationDate(urlToReturn.getExpirationDate());
@@ -37,31 +36,34 @@ public class UrlController {
         urlErrorResponseDto.setError("There is error while making this request");
         return new ResponseEntity<UrlErrorResponseDto>(urlErrorResponseDto, HttpStatus.NOT_FOUND);
     }
+
     @GetMapping("/{shortLink}")
-    public ResponseEntity<?> redirectToOriginal(@PathVariable String shortLink, HttpServletResponse response) throws IOException {
-        if(StringUtils.isEmpty(shortLink))
-        {
+    public ResponseEntity<?> redirectToOriginalUrl(@PathVariable String shortLink, HttpServletResponse response) throws IOException {
+
+        if (StringUtils.isEmpty(shortLink)) {
             UrlErrorResponseDto urlErrorResponseDto = new UrlErrorResponseDto();
-            urlErrorResponseDto.setStatus("400");
             urlErrorResponseDto.setError("Invalid Url");
-            return new ResponseEntity<UrlErrorResponseDto>(urlErrorResponseDto, HttpStatus.NOT_FOUND);
-        }
-        Url returnUrl = urlService.getEncodedUrl(shortLink);
-        if(returnUrl == null)
-        {
-            UrlErrorResponseDto urlErrorResponseDto = new UrlErrorResponseDto();
             urlErrorResponseDto.setStatus("400");
-            urlErrorResponseDto.setError("Url Does Not Exsists");
-            return new ResponseEntity<UrlErrorResponseDto>(urlErrorResponseDto, HttpStatus.NOT_FOUND);
-        }
-        if(returnUrl.getExpirationDate().isBefore(LocalDateTime.now()))
-        {
-            UrlErrorResponseDto urlErrorResponseDto = new UrlErrorResponseDto();
-            urlErrorResponseDto.setStatus("200");
-            urlErrorResponseDto.setError("Url expired. Please generate new ");
             return new ResponseEntity<UrlErrorResponseDto>(urlErrorResponseDto, HttpStatus.OK);
         }
-        response.sendRedirect(returnUrl.getOriginalLink());
+        Url urlToRet = urlService.getEncodedUrl(shortLink);
+
+        if (urlToRet == null) {
+            UrlErrorResponseDto urlErrorResponseDto = new UrlErrorResponseDto();
+            urlErrorResponseDto.setError("Url does not exist or it might have expired!");
+            urlErrorResponseDto.setStatus("400");
+            return new ResponseEntity<UrlErrorResponseDto>(urlErrorResponseDto, HttpStatus.OK);
+        }
+
+        if (urlToRet.getExpirationDate().isBefore(LocalDateTime.now())) {
+            urlService.deleteShortLink(urlToRet);
+            UrlErrorResponseDto urlErrorResponseDto = new UrlErrorResponseDto();
+            urlErrorResponseDto.setError("Url Expired. Please try generating a fresh one.");
+            urlErrorResponseDto.setStatus("200");
+            return new ResponseEntity<UrlErrorResponseDto>(urlErrorResponseDto, HttpStatus.OK);
+        }
+
+        response.sendRedirect(urlToRet.getOriginalLink());
         return null;
     }
 }

@@ -71,8 +71,8 @@ public class UrlServiceImpl implements UrlService {
 
     @Override
     public Url getEncodedUrl(String url) {
-        Url urltoReturn = urlDao.findByShortLink(url);
-        return urltoReturn;
+        Url urlToRet = urlDao.findByShortLink(url);
+        return urlToRet;
     }
 
     @Override
